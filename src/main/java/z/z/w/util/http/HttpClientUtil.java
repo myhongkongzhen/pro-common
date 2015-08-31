@@ -101,6 +101,14 @@ public class HttpClientUtil
 	}
 	
 	/**
+	 * @return the httpClient
+	 */
+	public static CloseableHttpClient getHttpClient()
+	{
+		return httpClient;
+	}
+	
+	/**
 	 * 請求URL中包含特殊字符如:|使用此API發送請求
 	 * Create by : 2015年8月27日 下午4:45:32
 	 */
