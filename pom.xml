@@ -6,6 +6,7 @@
 		<groupId>z.z.w</groupId>
 		<artifactId>pro-module</artifactId>
 		<version>2015083110-SNAPSHOT</version>
+		<relativePath>../pro-module/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>pro-common</artifactId>
