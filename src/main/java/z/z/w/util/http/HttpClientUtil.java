@@ -144,7 +144,7 @@ public class HttpClientUtil
 		{
 			httpPost.setConfig( config );
 			httpPost.addHeader( HTTP.CONTENT_TYPE, "application/json" );
-			httpPost.setHeader( "Accept-Charset", "GB2312,utf-8;q=0.7,*;q=0.7" );
+			httpPost.setHeader( "Accept-Charset", "gbk,GB2312,utf-8;q=0.7,*;q=0.7" );
 			httpPost.setHeader( "Accept-Language", "zh-cn,zh;q=0.5" );
 			httpPost.setHeader( HTTP.CONN_DIRECTIVE, "keep-alive" );
 			httpPost.setHeader( "refer", "sms.zhiyan.net" );
@@ -201,6 +201,25 @@ public class HttpClientUtil
 	private HttpClientUtil()
 	{
 		super();
+	}
+	
+	/**
+	 * Create by : 2015年8月31日 下午6:26:40
+	 * 
+	 * @throws Exception
+	 */
+	public static Object httpPost( URI uri ) throws Exception
+	{
+		try
+		{
+			HttpPost httpPost = new HttpPost( uri );
+			return doPost( httpPost );
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e );
+			throw e;
+		}
 	}
 	
 }
