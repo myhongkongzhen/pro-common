@@ -8,6 +8,7 @@ import java.net.URISyntaxException ;
 import java.net.URL ;
 import java.net.UnknownHostException ;
 import java.nio.charset.CodingErrorAction ;
+import java.util.Map ;
 
 import javax.net.ssl.SSLException ;
 
@@ -132,6 +133,35 @@ public class HttpClientUtil
 	}
 	
 	/**
+	 * Create by : 2015年9月2日 下午2:52:24
+	 */
+	public static String httpPost( String url, String msg, Map< String, String > headerMap ) throws Exception
+	{
+		try
+		{
+			StringEntity stringEntity = new StringEntity( msg, "utf-8" ) ;// 解决中文乱码问题
+			
+			HttpPost httpPost = new HttpPost( url ) ;
+			httpPost.setEntity( stringEntity ) ;
+			
+			if ( null != headerMap && headerMap.size() > 0 )
+			{
+				for ( Map.Entry< String, String > entry : headerMap.entrySet() )
+				{
+					httpPost.setHeader( entry.getKey(), entry.getValue() ) ;
+				}
+			}
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
 	 * 請求URL中包含特殊字符如:|使用此API發送請求
 	 * Create by : 2015年8月27日 下午4:45:32
 	 */
@@ -166,12 +196,16 @@ public class HttpClientUtil
 		try
 		{
 			httpPost.setConfig( config ) ;
+			/**
+			 * setHeader(name, value)：如果Header中没有定义则添加，如果已定义则用新的value覆盖原用value值。
+			 * addHeader(name, value)：如果Header中没有定义则添加，如果已定义则保持原有value不改变。
+			 */
 			httpPost.addHeader( HTTP.CONTENT_TYPE, "application/json" ) ;
-			httpPost.setHeader( "Accept-Charset", "gbk,GB2312,utf-8;q=0.7,*;q=0.7" ) ;
-			httpPost.setHeader( "Accept-Language", "zh-cn,zh;q=0.5" ) ;
-			httpPost.setHeader( HTTP.CONN_DIRECTIVE, "keep-alive" ) ;
-			httpPost.setHeader( "refer", "localhost" ) ;
-			httpPost.setHeader( HTTP.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2" ) ;
+			httpPost.addHeader( "Accept-Charset", "gbk,GB2312,utf-8;q=0.7,*;q=0.7" ) ;
+			httpPost.addHeader( "Accept-Language", "zh-cn,zh;q=0.5" ) ;
+			httpPost.addHeader( HTTP.CONN_DIRECTIVE, "keep-alive" ) ;
+			httpPost.addHeader( "refer", "localhost" ) ;
+			httpPost.addHeader( HTTP.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2" ) ;
 			
 			CloseableHttpResponse response = httpClient.execute( httpPost, HttpClientContext.create() ) ;
 			try
