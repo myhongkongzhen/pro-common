@@ -8,9 +8,9 @@
 
 	<appender name="commonFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>target/logs/infoFile.log</file>
+		<file>${logback.target}/logs/infoFile.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>target/logs/infoFile.log.%i</fileNamePattern>
+			<fileNamePattern>${logback.target}/logs/infoFile.log.%i</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>6</maxIndex>
 		</rollingPolicy>
@@ -26,9 +26,9 @@
 	<!-- 文件記錄錯誤日誌 ERROR 簡單記錄 -->
 	<appender name="errorFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>target/logs/errorFile.log</file>
+		<file>${logback.target}/logs/errorFile.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>target/logs/errorFile.log.%i</fileNamePattern>
+			<fileNamePattern>${logback.target}/logs/errorFile.log.%i</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>3</maxIndex>
 		</rollingPolicy>
@@ -53,9 +53,8 @@
 	</appender>
 	
 	<logger name="z.z.w" level="info"/>
-<!-- 	<logger name="org.hibernate.tool.hbm2ddl" level="info"/> -->
 	<!-- mybatis sql 日誌 -->
-<!-- 	<logger name="z.z.w.test.dao" level="debug" /> -->
+	<logger name="z.z.w.test.dao" level="debug" />
  
 	<root level="error">
 		<appender-ref ref="commonFile" />
