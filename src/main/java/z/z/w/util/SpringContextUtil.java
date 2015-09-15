@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContextAware ;
  **************************************************************************/
 public class SpringContextUtil implements ApplicationContextAware
 {
-	private static transient ApplicationContext	SPRING_CONTEXT ;
+	private static transient ApplicationContext	applicationContext ;
 	
 	/*
 	 * (non-Javadoc)
@@ -27,32 +27,32 @@ public class SpringContextUtil implements ApplicationContextAware
 	 */
 	public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException
 	{
-		SPRING_CONTEXT = applicationContext ;
+		SpringContextUtil.applicationContext = applicationContext ;
 	}
 	
 	@SuppressWarnings( "unchecked" )
 	public static < T > T getBean( Class< T > type, String name )
 	{
 		
-		if ( getSpringContext().containsBean( name ) )
+		if ( getApplicationContext().containsBean( name ) )
 		{
-			Object bean = getSpringContext().getBean( name ) ;
+			Object bean = getApplicationContext().getBean( name ) ;
 			if ( type.isInstance( bean ) ) { return ( T ) bean ; }
 		}
 		return null ;
 	}
 	
-	/**
-	 * Create by : 2015年9月7日 下午2:20:15
-	 */
-	public static ApplicationContext getSpringContext()
-	{
-		return SPRING_CONTEXT ;
-	}
-	
 	public static < T > T getBean( final Class< T > clazz )
 	{
-		return clazz.cast( BeanFactoryUtils.beanOfTypeIncludingAncestors( SPRING_CONTEXT, clazz ) ) ;
+		return clazz.cast( BeanFactoryUtils.beanOfTypeIncludingAncestors( SpringContextUtil.applicationContext, clazz ) ) ;
+	}
+	
+	/**
+	 * @return the applicationContext
+	 */
+	public static ApplicationContext getApplicationContext()
+	{
+		return applicationContext ;
 	}
 	
 }
