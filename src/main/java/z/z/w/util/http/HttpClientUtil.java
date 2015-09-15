@@ -327,7 +327,7 @@ public class HttpClientUtil
 			try
 			{
 				HttpEntity entity = response.getEntity() ;
-				logger.info( "{}", entity ) ;
+				logger.debug( "{}", entity ) ;
 //				return EntityUtils.toString( entity, "GBK" ) ;
 				return EntityUtils.toString( entity, "utf-8" ) ;
 			}
