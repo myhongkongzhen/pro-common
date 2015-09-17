@@ -15,7 +15,7 @@
 **/*.project
 **/*.class
 **/*.swp
-**/HttpClient*
+**/src/test/**/HttpClient*
 
 Thumbs.db
 ehthumbs.db
