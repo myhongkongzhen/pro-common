@@ -65,6 +65,7 @@ public class InitializeServerImpl implements IServiceLoader
 					if ( StringUtils.isBlank( serviceName ) ) continue ;
 					
 					Runnable iServer = SpringContextUtil.getBean( Runnable.class , serviceName ) ;
+					if ( null == iServer ) continue ;
 					logger.info( "服務[{}-{}:{}]開始執行。。。。" , serviceId , serviceName , iServer ) ;
 					
 					new Thread( iServer ).start() ;
