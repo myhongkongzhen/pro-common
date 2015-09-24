@@ -1,4 +1,4 @@
-package z.z.w.test.demo.server;
+package z.z.w.test.demo.server ;
 
 /**************************************************************************
  * <pre>
@@ -12,7 +12,7 @@ package z.z.w.test.demo.server;
  **************************************************************************/
 public interface IServiceLoaderTest
 {
-	public void loadService();
+	public void destroy() ;
 	
-	public void destroy();
+	public void loadService() ;
 }

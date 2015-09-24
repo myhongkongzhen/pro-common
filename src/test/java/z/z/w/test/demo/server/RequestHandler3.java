@@ -1,4 +1,4 @@
-package z.z.w.test.demo.server;
+package z.z.w.test.demo.server ;
 
 /**************************************************************************
  * <pre>
@@ -12,13 +12,15 @@ package z.z.w.test.demo.server;
  **************************************************************************/
 public class RequestHandler3 implements Handler
 {
+	@Override
 	public boolean accept( String txt )
 	{
-		return txt.equals( "2" );
+		return txt.equals( "2" ) ;
 	}
 	
+	@Override
 	public String execute()
 	{
-		return "2222222222222222222222";
+		return "2222222222222222222222" ;
 	}
 }

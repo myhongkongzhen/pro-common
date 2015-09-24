@@ -1,14 +1,14 @@
-package z.z.w.test.demo.zy;
+package z.z.w.test.demo.zy ;
 
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.Random ;
+import java.util.concurrent.Callable ;
+import java.util.concurrent.CompletionService ;
+import java.util.concurrent.ExecutionException ;
+import java.util.concurrent.ExecutorCompletionService ;
+import java.util.concurrent.ExecutorService ;
+import java.util.concurrent.Executors ;
+import java.util.concurrent.Future ;
+import java.util.concurrent.TimeUnit ;
 
 /**************************************************************************
  * <pre>
@@ -28,44 +28,39 @@ public class CallableTest
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	public static void main( String[ ] args ) throws InterruptedException, ExecutionException
+	public static void main( String[] args ) throws InterruptedException , ExecutionException
 	{
-		ExecutorService executor = Executors.newFixedThreadPool( 200 );
-		CompletionService< Param > comp = new ExecutorCompletionService< Param >( executor );
+		ExecutorService executor = Executors.newFixedThreadPool( 200 ) ;
+		CompletionService< Param > comp = new ExecutorCompletionService< Param >( executor ) ;
 		
-		for ( int i = 0; i < 500; i++ )
-		{
+		for ( int i = 0 ; i < 500 ; i++ )
 			comp.submit( new Callable< Param >()
 			{
 				@Override
 				public Param call() throws Exception
 				{
-					Param p = new Param();
-					Random rand = new Random();
-					TimeUnit.SECONDS.sleep( rand.nextInt( 7 ) );
-					System.out.println( Thread.currentThread().getName() + "====" );
-					p.setI( rand.nextInt() );
-					p.setN( rand.nextInt() + "=This is test!!!!!" );
-					return p;
+					Param p = new Param() ;
+					Random rand = new Random() ;
+					TimeUnit.SECONDS.sleep( rand.nextInt( 7 ) ) ;
+					System.out.println( Thread.currentThread().getName() + "====" ) ;
+					p.setI( rand.nextInt() ) ;
+					p.setN( rand.nextInt() + "=This is test!!!!!" ) ;
+					return p ;
 				}
-			} );
-		}
-		executor.shutdown();
+			} ) ;
+		executor.shutdown() ;
 		
-		int count = 0, index = 1;
+		int count = 0 , index = 1 ;
 		while ( count < 500 )
 		{
-			Future< Param > f = comp.poll();
-			if ( f == null )
-			{
-				System.out.println( index + " : " + Thread.currentThread().getName() + " 没发现有完成的任务" );
-			}
+			Future< Param > f = comp.poll() ;
+			if ( f == null ) System.out.println( index + " : " + Thread.currentThread().getName() + " 没发现有完成的任务" ) ;
 			else
 			{
-				System.out.println( index + " : " + Thread.currentThread().getName() + "产生了一个随机数: " + f.get() );
-				count++;
+				System.out.println( index + " : " + Thread.currentThread().getName() + "产生了一个随机数: " + f.get() ) ;
+				count++ ;
 			}
-			index++;
+			index++ ;
 //			TimeUnit.MILLISECONDS.sleep( 500 );
 		}
 		
@@ -75,26 +70,12 @@ public class CallableTest
 
 class Param
 {
-	private int		i;
-	private String	n;
+	private int		i ;
+	private String	n ;
 	
 	public Param()
 	{
-		super();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + i;
-		result = prime * result + ( ( n == null ) ? 0 : n.hashCode() );
-		return result;
+		super() ;
 	}
 	
 	/*
@@ -104,17 +85,17 @@ class Param
 	@Override
 	public boolean equals( Object obj )
 	{
-		if ( this == obj ) return true;
-		if ( obj == null ) return false;
-		if ( getClass() != obj.getClass() ) return false;
-		Param other = ( Param ) obj;
-		if ( i != other.i ) return false;
+		if ( this == obj ) return true ;
+		if ( obj == null ) return false ;
+		if ( getClass() != obj.getClass() ) return false ;
+		Param other = ( Param ) obj ;
+		if ( i != other.i ) return false ;
 		if ( n == null )
 		{
-			if ( other.n != null ) return false;
+			if ( other.n != null ) return false ;
 		}
-		else if ( !n.equals( other.n ) ) return false;
-		return true;
+		else if ( !n.equals( other.n ) ) return false ;
+		return true ;
 	}
 	
 	/**
@@ -122,15 +103,7 @@ class Param
 	 */
 	public int getI()
 	{
-		return i;
-	}
-	
-	/**
-	 * @param i the i to set
-	 */
-	public void setI( int i )
-	{
-		this.i = i;
+		return i ;
 	}
 	
 	/**
@@ -138,15 +111,39 @@ class Param
 	 */
 	public String getN()
 	{
-		return n;
+		return n ;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31 ;
+		int result = 1 ;
+		result = ( prime * result ) + i ;
+		result = ( prime * result ) + ( ( n == null ) ? 0 : n.hashCode() ) ;
+		return result ;
 	}
 	
 	/**
-	 * @param n the n to set
+	 * @param i
+	 *            the i to set
+	 */
+	public void setI( int i )
+	{
+		this.i = i ;
+	}
+	
+	/**
+	 * @param n
+	 *            the n to set
 	 */
 	public void setN( String n )
 	{
-		this.n = n;
+		this.n = n ;
 	}
 	
 	/*
@@ -156,7 +153,7 @@ class Param
 	@Override
 	public String toString()
 	{
-		return "Param [i=" + i + ", n=" + n + "]";
+		return "Param [i=" + i + ", n=" + n + "]" ;
 	}
 	
 }

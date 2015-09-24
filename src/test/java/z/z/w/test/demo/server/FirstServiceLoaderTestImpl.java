@@ -1,4 +1,4 @@
-package z.z.w.test.demo.server;
+package z.z.w.test.demo.server ;
 
 /**************************************************************************
  * <pre>
@@ -15,23 +15,23 @@ public class FirstServiceLoaderTestImpl implements IServiceLoaderTest
 	
 	/*
 	 * (non-Javadoc)
-	 * @see z.z.w.test.server.IServiceLoaderTest#loadService()
-	 */
-	@Override
-	public void loadService()
-	{
-		System.out.println( "FirstServiceLoaderTestImpl loadService....." );
-	}
-	
-	/*
-	 * (non-Javadoc)
 	 * @see z.z.w.test.server.IServiceLoaderTest#destroy()
 	 */
 	@Override
 	public void destroy()
 	{
-		System.out.println( "FirstServiceLoaderTestImpl destroy....." );
+		System.out.println( "FirstServiceLoaderTestImpl destroy....." ) ;
 		
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see z.z.w.test.server.IServiceLoaderTest#loadService()
+	 */
+	@Override
+	public void loadService()
+	{
+		System.out.println( "FirstServiceLoaderTestImpl loadService....." ) ;
 	}
 	
 }

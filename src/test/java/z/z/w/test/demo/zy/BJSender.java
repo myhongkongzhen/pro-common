@@ -22,6 +22,40 @@ public class BJSender
 {
 	
 	/**
+	 * @param myurl
+	 * @return
+	 * @throws IOException
+	 */
+	private static String getHttp( String myurl ) throws IOException
+	{
+		URL url = new URL( myurl ) ;
+		HttpURLConnection connection = ( HttpURLConnection ) url.openConnection() ;
+		connection.setRequestProperty( "user-agent" , "mozilla/4.0 (compatible; msie 6.0; windows 2000)" ) ;
+		connection.setConnectTimeout( 15000 ) ;
+		connection.setReadTimeout( 30000 ) ;
+		connection.connect() ;
+		System.out.println( "--debug myurl:" + myurl + ",length:" + connection.getContentLength() + ",status:" + connection.getResponseCode() ) ;
+		StringBuffer sb = new StringBuffer() ;
+		if ( connection.getResponseCode() == 200 )
+		{
+			InputStream in = connection.getInputStream() ;
+			BufferedReader breader = new BufferedReader( new InputStreamReader( in , "gbk" ) ) ;
+			String str = breader.readLine() ;
+			while ( str != null )
+			{
+				sb.append( str ) ;
+				str = breader.readLine() ;
+			}
+			in.close() ;
+		}
+		connection.disconnect() ;
+		connection = null ;
+		url = null ;
+		return sb.toString() ;
+		
+	}
+	
+	/**
 	 * @param args
 	 * @throws IOException
 	 */
@@ -40,7 +74,7 @@ public class BJSender
 		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8SMS.jsp" ) ;
 		sb.append( "?username=" + "tjyk" ) ;// 用户名
 		sb.append( "&pwd=" + "y7u8r5e3" ) ;// 密码
-		sb.append( "&msg=" + URLEncoder.encode( content, "utf-8" ) ) ;
+		sb.append( "&msg=" + URLEncoder.encode( content , "utf-8" ) ) ;
 		sb.append( "&mobile=15098648522" ) ;// 手机号码
 		sb.append( "&gwid=" + "2" ) ;// 不动
 		
@@ -50,40 +84,6 @@ public class BJSender
 		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8SMS.jsp?username=tjyk&pwd=y7u8r5e3&msg=This+is+a+test+of+the+sms%3B&mobile=15098648522&gwid=2" ) ;
 		String result = BJSender.getHttp( sb.toString() ) ;
 		System.out.println( result ) ;
-		
-	}
-	
-	/**
-	 * @param myurl
-	 * @return
-	 * @throws IOException
-	 */
-	private static String getHttp( String myurl ) throws IOException
-	{
-		URL url = new URL( myurl ) ;
-		HttpURLConnection connection = ( HttpURLConnection ) url.openConnection() ;
-		connection.setRequestProperty( "user-agent", "mozilla/4.0 (compatible; msie 6.0; windows 2000)" ) ;
-		connection.setConnectTimeout( 15000 ) ;
-		connection.setReadTimeout( 30000 ) ;
-		connection.connect() ;
-		System.out.println( "--debug myurl:" + myurl + ",length:" + connection.getContentLength() + ",status:" + connection.getResponseCode() ) ;
-		StringBuffer sb = new StringBuffer() ;
-		if ( connection.getResponseCode() == 200 )
-		{
-			InputStream in = connection.getInputStream() ;
-			BufferedReader breader = new BufferedReader( new InputStreamReader( in, "gbk" ) ) ;
-			String str = breader.readLine() ;
-			while ( str != null )
-			{
-				sb.append( str ) ;
-				str = breader.readLine() ;
-			}
-			in.close() ;
-		}
-		connection.disconnect() ;
-		connection = null ;
-		url = null ;
-		return sb.toString() ;
 		
 	}
 	

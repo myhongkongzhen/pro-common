@@ -24,14 +24,14 @@ public class MapTest
 	public static void main( String[] args )
 	{
 		String result = "14386746486091|13718249651|0|2015-03-19 05:50:00^14386746487031|13839399408|0|2015-03-19 05:50:00^14386746487031|13339399808|0|2015-03-19 05:50:00^14386746487031|13839394808|0|2015-03-19 05:50:00" ;
-		String array[] = result.split( "\\^", -1 ) ;
+		String array[] = result.split( "\\^" , -1 ) ;
 		Map< String, String > params = new HashMap< String, String >() ;
 		for ( String aay : array )
 		{
 			try
 			{
 				final String smsStatus = aay ;
-				String ay[] = smsStatus.split( "\\|", -1 ) ;
+				String ay[] = smsStatus.split( "\\|" , -1 ) ;
 				REQParam pv = new REQParam() ;// updateParseData( sv );
 				pv.setUid( ay[ 0 ] ) ;
 				pv.setMerSmsChanSig( ay[ 2 ] ) ;
@@ -49,7 +49,7 @@ public class MapTest
 					s = sb.toString() ;
 					System.out.println( "=====>" + tmp + "===>" + sb.toString() ) ;
 				}
-				params.put( pv.getUid(), s ) ;
+				params.put( pv.getUid() , s ) ;
 				
 			}
 			catch ( Exception e )
@@ -95,31 +95,6 @@ class REQParam
 	
 	/*
 	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "REQParam [mobile=" + mobile + ", uid=" + uid + ", merSmsChanSig=" + merSmsChanSig + "]" ;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31 ;
-		int result = 1 ;
-		result = prime * result + ( ( merSmsChanSig == null ) ? 0 : merSmsChanSig.hashCode() ) ;
-		result = prime * result + ( ( mobile == null ) ? 0 : mobile.hashCode() ) ;
-		result = prime * result + ( ( uid == null ) ? 0 : uid.hashCode() ) ;
-		return result ;
-	}
-	
-	/*
-	 * (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -148,19 +123,19 @@ class REQParam
 	}
 	
 	/**
+	 * @return the merSmsChanSig
+	 */
+	public String getMerSmsChanSig()
+	{
+		return merSmsChanSig ;
+	}
+	
+	/**
 	 * @return the mobile
 	 */
 	public String getMobile()
 	{
 		return mobile ;
-	}
-	
-	/**
-	 * @param mobile the mobile to set
-	 */
-	public void setMobile( String mobile )
-	{
-		this.mobile = mobile ;
 	}
 	
 	/**
@@ -171,28 +146,56 @@ class REQParam
 		return uid ;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31 ;
+		int result = 1 ;
+		result = ( prime * result ) + ( ( merSmsChanSig == null ) ? 0 : merSmsChanSig.hashCode() ) ;
+		result = ( prime * result ) + ( ( mobile == null ) ? 0 : mobile.hashCode() ) ;
+		result = ( prime * result ) + ( ( uid == null ) ? 0 : uid.hashCode() ) ;
+		return result ;
+	}
+	
 	/**
-	 * @param uid the uid to set
+	 * @param merSmsChanSig
+	 *            the merSmsChanSig to set
+	 */
+	public void setMerSmsChanSig( String merSmsChanSig )
+	{
+		this.merSmsChanSig = merSmsChanSig ;
+	}
+	
+	/**
+	 * @param mobile
+	 *            the mobile to set
+	 */
+	public void setMobile( String mobile )
+	{
+		this.mobile = mobile ;
+	}
+	
+	/**
+	 * @param uid
+	 *            the uid to set
 	 */
 	public void setUid( String uid )
 	{
 		this.uid = uid ;
 	}
 	
-	/**
-	 * @return the merSmsChanSig
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
-	public String getMerSmsChanSig()
+	@Override
+	public String toString()
 	{
-		return merSmsChanSig ;
-	}
-	
-	/**
-	 * @param merSmsChanSig the merSmsChanSig to set
-	 */
-	public void setMerSmsChanSig( String merSmsChanSig )
-	{
-		this.merSmsChanSig = merSmsChanSig ;
+		return "REQParam [mobile=" + mobile + ", uid=" + uid + ", merSmsChanSig=" + merSmsChanSig + "]" ;
 	}
 	
 }

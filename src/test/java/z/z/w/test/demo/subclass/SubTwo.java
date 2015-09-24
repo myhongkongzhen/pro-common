@@ -1,4 +1,4 @@
-package z.z.w.test.demo.subclass;
+package z.z.w.test.demo.subclass ;
 
 /**************************************************************************
  * <pre>
@@ -19,6 +19,6 @@ public class SubTwo extends SubOne
 	@Override
 	public void print()
 	{
-		System.out.println( "---SubTwo----" );
+		System.out.println( "---SubTwo----" ) ;
 	}
 }

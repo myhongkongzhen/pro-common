@@ -1,4 +1,4 @@
-package z.z.w.test.demo.subclass;
+package z.z.w.test.demo.subclass ;
 
 /**************************************************************************
  * <pre>
@@ -16,11 +16,11 @@ public class Main
 	/**
 	 * Create by : 2015年8月21日 上午11:31:01
 	 */
-	public static void main( String[ ] args )
+	public static void main( String[] args )
 	{
-		SubTwo t = new SubTwo();
-		t.print();
-		t.test();
+		SubTwo t = new SubTwo() ;
+		t.print() ;
+		t.test() ;
 	}
 	
 }

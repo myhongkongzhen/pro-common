@@ -1,6 +1,6 @@
-package z.z.w.test.demo;
+package z.z.w.test.demo ;
 
-import java.util.Random;
+import java.util.Random ;
 
 /**************************************************************************
  * <pre>
@@ -20,12 +20,12 @@ public class RandomTest
 	 * 
 	 * @param args
 	 */
-	public static void main( String[ ] args )
+	public static void main( String[] args )
 	{
-		Random random = new Random( 100 );
+		Random random = new Random( 100 ) ;
 //		for ( int i = 0; i < 10; i++ )
 //		{
-		System.out.println( Math.abs( random.nextInt() ) % 100 );
+		System.out.println( Math.abs( random.nextInt() ) % 100 ) ;
 //		}
 		
 	}
