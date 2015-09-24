@@ -34,11 +34,9 @@ public class CyclicBarrierTest3
 	public static void main( String[] args )
 	{
 		System.out.println( "Start========" + Thread.currentThread().getName() ) ;
-		CyclicBarrier barrier = new CyclicBarrier( size, new MainWorker4( comp ) ) ;
+		CyclicBarrier barrier = new CyclicBarrier( size , new MainWorker4( comp ) ) ;
 		for ( int i = 0 ; i < size ; i++ )
-		{
 			comp.submit( new Worker3( barrier ) ) ;
-		}
 		
 		getExec.shutdown() ;
 		System.out.println( "FINISH========" + Thread.currentThread().getName() ) ;
@@ -72,7 +70,6 @@ class MainWorker4 implements Runnable
 //			Thread.sleep( ll * 10 );
 			
 			for ( int i = 0 ; i < 4 ; i++ )
-			{
 				try
 				{
 					System.out.println( "--------------" ) ;
@@ -94,7 +91,6 @@ class MainWorker4 implements Runnable
 				{
 					e.printStackTrace() ;
 				}
-			}
 		}
 		finally
 		{

@@ -29,29 +29,6 @@ public class SensitiveWordInit
 	}
 	
 	/**
-	 * @author chenming
-	 * @date 2014年4月20日 下午2:28:32
-	 * @version 1.0
-	 */
-	@SuppressWarnings( "rawtypes" )
-	public Map initKeyWord()
-	{
-		try
-		{
-			// 读取敏感词库
-			Set< String > keyWordSet = readSensitiveWordFile() ;
-			// 将敏感词库加入到HashMap中
-			addSensitiveWordToHashMap( keyWordSet ) ;
-			// spring获取application，然后application.setAttribute("sensitiveWordMap",sensitiveWordMap);
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace() ;
-		}
-		return sensitiveWordMap ;
-	}
-	
-	/**
 	 * 读取敏感词库，将敏感词放入HashSet中，构建一个DFA算法模型：<br>
 	 * 
 	 * <pre>
@@ -88,10 +65,11 @@ public class SensitiveWordInit
 	 * 
 	 * @author chenming
 	 * @date 2014年4月20日 下午3:04:20
-	 * @param keyWordSet 敏感词库
+	 * @param keyWordSet
+	 *            敏感词库
 	 * @version 1.0
 	 */
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
+	@SuppressWarnings( { "rawtypes" , "unchecked" } )
 	private void addSensitiveWordToHashMap( Set< String > keyWordSet )
 	{
 		sensitiveWordMap = new HashMap( keyWordSet.size() ) ;     // 初始化敏感词容器，减少扩容操作
@@ -109,24 +87,41 @@ public class SensitiveWordInit
 				char keyChar = key.charAt( i ) ;       // 转换成char型
 				Object wordMap = nowMap.get( keyChar ) ;       // 获取
 				
-				if ( wordMap != null )
-				{        // 如果存在该key，直接赋值
-					nowMap = ( Map ) wordMap ;
-				}
+				if ( wordMap != null ) nowMap = ( Map ) wordMap ;
 				else
 				{     // 不存在则，则构建一个map，同时将isEnd设置为0，因为他不是最后一个
 					newWorMap = new HashMap< String, String >() ;
-					newWorMap.put( "isEnd", "0" ) ;     // 不是最后一个
-					nowMap.put( keyChar, newWorMap ) ;
+					newWorMap.put( "isEnd" , "0" ) ;     // 不是最后一个
+					nowMap.put( keyChar , newWorMap ) ;
 					nowMap = newWorMap ;
 				}
 				
-				if ( i == key.length() - 1 )
-				{
-					nowMap.put( "isEnd", "1" ) ;    // 最后一个
-				}
+				if ( i == ( key.length() - 1 ) ) nowMap.put( "isEnd" , "1" ) ;    // 最后一个
 			}
 		}
+	}
+	
+	/**
+	 * @author chenming
+	 * @date 2014年4月20日 下午2:28:32
+	 * @version 1.0
+	 */
+	@SuppressWarnings( "rawtypes" )
+	public Map initKeyWord()
+	{
+		try
+		{
+			// 读取敏感词库
+			Set< String > keyWordSet = readSensitiveWordFile() ;
+			// 将敏感词库加入到HashMap中
+			addSensitiveWordToHashMap( keyWordSet ) ;
+			// spring获取application，然后application.setAttribute("sensitiveWordMap",sensitiveWordMap);
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace() ;
+		}
+		return sensitiveWordMap ;
 	}
 	
 	/**
@@ -144,7 +139,7 @@ public class SensitiveWordInit
 		Set< String > set = null ;
 		
 		File file = new File( "D:\\workspace_my3\\pro-common\\src\\test\\java\\z\\z\\w\\util\\keyword\\keyword.txt" ) ;    // 读取文件
-		InputStreamReader read = new InputStreamReader( new FileInputStream( file ), ENCODING ) ;
+		InputStreamReader read = new InputStreamReader( new FileInputStream( file ) , ENCODING ) ;
 		try
 		{
 			if ( file.isFile() && file.exists() )
@@ -153,14 +148,9 @@ public class SensitiveWordInit
 				BufferedReader bufferedReader = new BufferedReader( read ) ;
 				String txt = null ;
 				while ( ( txt = bufferedReader.readLine() ) != null )
-				{    // 读取文件，将文件内容放入到set中
 					set.add( txt ) ;
-				}
 			}
-			else
-			{         // 不存在抛出异常信息
-				throw new Exception( "敏感词库文件不存在" ) ;
-			}
+			else throw new Exception( "敏感词库文件不存在" ) ;
 		}
 		catch ( Exception e )
 		{

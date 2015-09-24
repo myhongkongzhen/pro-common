@@ -1,4 +1,4 @@
-package z.z.w.test.demo.subclass;
+package z.z.w.test.demo.subclass ;
 
 /**************************************************************************
  * <pre>
@@ -19,7 +19,7 @@ public class SubOne extends Parent
 	@Override
 	public void print()
 	{
-		System.out.println( "---SubOne----" );
+		System.out.println( "---SubOne----" ) ;
 	}
 	
 	/*
@@ -29,6 +29,6 @@ public class SubOne extends Parent
 	@Override
 	public void test()
 	{
-		System.out.println( "---SubOne-test---" );
+		System.out.println( "---SubOne-test---" ) ;
 	}
 }

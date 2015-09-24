@@ -1,8 +1,8 @@
-package z.z.w.test;
+package z.z.w.test ;
 
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test ;
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
 
 /**************************************************************************
  * <pre>
@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
  **************************************************************************/
 public class BaseJUnitTest
 {
-	private static Logger	logger	= LoggerFactory.getLogger( BaseJUnitTest.class );
+	private static Logger	logger	= LoggerFactory.getLogger( BaseJUnitTest.class ) ;
 	
 	@Test
 	public void test()
 	{
-		logger.info( "This is test." );
+		logger.info( "This is test." ) ;
 	}
 	
 }

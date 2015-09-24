@@ -33,11 +33,9 @@ public class CyclicBarrierTest2
 	public static void main( String[] args )
 	{
 		System.out.println( "Start========" + Thread.currentThread().getName() ) ;
-		CyclicBarrier barrier = new CyclicBarrier( size, new MainWorker() ) ;
+		CyclicBarrier barrier = new CyclicBarrier( size , new MainWorker() ) ;
 		for ( int i = 0 ; i < size ; i++ )
-		{
 			comp.submit( new Worker( barrier ) ) ;
-		}
 		
 //		for ( int i = 0; i < size; i++ )
 //		{

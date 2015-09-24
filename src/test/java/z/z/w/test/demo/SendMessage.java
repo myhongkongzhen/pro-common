@@ -24,48 +24,37 @@ import z.z.w.test.demo.zy.HttpClient ;
  **************************************************************************/
 public class SendMessage
 {
-	public static void main( String[] args ) throws Exception
+	/**
+	 * @param myurl
+	 * @return
+	 * @throws IOException
+	 */
+	private static String getHttp( String myurl ) throws IOException
 	{
-		String content = "您的注册码是2015072219【智驗科技】" ;
+		URL url = new URL( myurl ) ;
+		HttpURLConnection connection = ( HttpURLConnection ) url.openConnection() ;
+		connection.setRequestProperty( "user-agent" , "mozilla/4.0 (compatible; msie 6.0; windows 2000)" ) ;
+		connection.setConnectTimeout( 15000 ) ;
+		connection.setReadTimeout( 30000 ) ;
+		connection.connect() ;
+		System.out.println( "--debug myurl:" + myurl + "    ,length:" + connection.getContentLength() + " , status:" + connection.getResponseCode() ) ;
 		StringBuffer sb = new StringBuffer() ;
-		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8SMS.jsp" ) ;
-		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8Report.jsp" ) ;
-		sb.append( "?username=" + "tjyk" ) ;// 用户名
-		sb.append( "&pwd=" + "y7u8r5e3" ) ;// 密码
-		sb.append( "&msg=" + URLEncoder.encode( content, "utf-8" ) ) ;
-		sb.append( "&mobile=15098648522" ) ;// 手机号码
-		sb.append( "&gwid=" + "2" ) ;// 不动
-		
-		sb.append( "https://rest.nexmo.com/sms/json?api_key=97fa83ab&api_secret=e08c0e99&from=NEXMO&to=8615098648522&text=Welcome+to+Nexmo" ) ;
-		sb.append( "http://202.105.136.108:19998/zyccreport.do" ) ;
-		sb.append( "?data=" ).append( getReqParam() ) ;
-		String result = SendMessage.getHttp( sb.toString() ) ;
-		System.out.println( result ) ;
-		
-		System.out.println( "==============================" ) ;
-		Map< String, String > params = new HashMap< String, String >() ;
-		/**
-		 * private String mobile;
-		 * private String datetime;
-		 * private String status;
-		 * private String desc;
-		 * private String uid;
-		 */
-//		params.put( "mobile", "13427853654" );
-//		params.put( "datetime", "2015-03-02 23:11:11" );
-//		params.put( "status", "1" );
-//		params.put( "desc", "" );
-//		params.put( "uid", "vkele46n5763kduiz3jsnfsl" );
-		
-		params.put( "data", getReqParam() ) ;
-		sb = new StringBuffer() ;
-		sb.append( "http://202.105.136.108:19998/zyccreport.do" ) ;
-		
-		HttpClient hc = new HttpClient( sb.toString(), 5000, 5000 ) ;
-		int status = hc.send( params, "UTF-8" ) ;
-		System.out.println( status ) ;
-		String rsp = hc.getResult() ;
-		System.out.println( rsp ) ;
+		if ( connection.getResponseCode() == 200 )
+		{
+			InputStream in = connection.getInputStream() ;
+			BufferedReader breader = new BufferedReader( new InputStreamReader( in , "gbk" ) ) ;
+			String str = breader.readLine() ;
+			while ( str != null )
+			{
+				sb.append( str ) ;
+				str = breader.readLine() ;
+			}
+			in.close() ;
+		}
+		connection.disconnect() ;
+		connection = null ;
+		url = null ;
+		return sb.toString() ;
 		
 	}
 	
@@ -93,37 +82,48 @@ public class SendMessage
 		return sb.toString() ;
 	}
 	
-	/**
-	 * @param myurl
-	 * @return
-	 * @throws IOException
-	 */
-	private static String getHttp( String myurl ) throws IOException
+	public static void main( String[] args ) throws Exception
 	{
-		URL url = new URL( myurl ) ;
-		HttpURLConnection connection = ( HttpURLConnection ) url.openConnection() ;
-		connection.setRequestProperty( "user-agent", "mozilla/4.0 (compatible; msie 6.0; windows 2000)" ) ;
-		connection.setConnectTimeout( 15000 ) ;
-		connection.setReadTimeout( 30000 ) ;
-		connection.connect() ;
-		System.out.println( "--debug myurl:" + myurl + "    ,length:" + connection.getContentLength() + " , status:" + connection.getResponseCode() ) ;
+		String content = "您的注册码是2015072219【智驗科技】" ;
 		StringBuffer sb = new StringBuffer() ;
-		if ( connection.getResponseCode() == 200 )
-		{
-			InputStream in = connection.getInputStream() ;
-			BufferedReader breader = new BufferedReader( new InputStreamReader( in, "gbk" ) ) ;
-			String str = breader.readLine() ;
-			while ( str != null )
-			{
-				sb.append( str ) ;
-				str = breader.readLine() ;
-			}
-			in.close() ;
-		}
-		connection.disconnect() ;
-		connection = null ;
-		url = null ;
-		return sb.toString() ;
+		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8SMS.jsp" ) ;
+		sb.append( "http://sms.weiyingjia.cn:8080/dog3/httpUTF8Report.jsp" ) ;
+		sb.append( "?username=" + "tjyk" ) ;// 用户名
+		sb.append( "&pwd=" + "y7u8r5e3" ) ;// 密码
+		sb.append( "&msg=" + URLEncoder.encode( content , "utf-8" ) ) ;
+		sb.append( "&mobile=15098648522" ) ;// 手机号码
+		sb.append( "&gwid=" + "2" ) ;// 不动
+		
+		sb.append( "https://rest.nexmo.com/sms/json?api_key=97fa83ab&api_secret=e08c0e99&from=NEXMO&to=8615098648522&text=Welcome+to+Nexmo" ) ;
+		sb.append( "http://202.105.136.108:19998/zyccreport.do" ) ;
+		sb.append( "?data=" ).append( getReqParam() ) ;
+		String result = SendMessage.getHttp( sb.toString() ) ;
+		System.out.println( result ) ;
+		
+		System.out.println( "==============================" ) ;
+		Map< String, String > params = new HashMap< String, String >() ;
+		/**
+		 * private String mobile;
+		 * private String datetime;
+		 * private String status;
+		 * private String desc;
+		 * private String uid;
+		 */
+//		params.put( "mobile", "13427853654" );
+//		params.put( "datetime", "2015-03-02 23:11:11" );
+//		params.put( "status", "1" );
+//		params.put( "desc", "" );
+//		params.put( "uid", "vkele46n5763kduiz3jsnfsl" );
+		
+		params.put( "data" , getReqParam() ) ;
+		sb = new StringBuffer() ;
+		sb.append( "http://202.105.136.108:19998/zyccreport.do" ) ;
+		
+		HttpClient hc = new HttpClient( sb.toString() , 5000 , 5000 ) ;
+		int status = hc.send( params , "UTF-8" ) ;
+		System.out.println( status ) ;
+		String rsp = hc.getResult() ;
+		System.out.println( rsp ) ;
 		
 	}
 }

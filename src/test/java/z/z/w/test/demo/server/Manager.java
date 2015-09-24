@@ -1,9 +1,9 @@
-package z.z.w.test.demo.server;
+package z.z.w.test.demo.server ;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.ArrayList ;
+import java.util.Iterator ;
+import java.util.List ;
+import java.util.ServiceLoader ;
 
 /**************************************************************************
  * <pre>
@@ -17,27 +17,20 @@ import java.util.ServiceLoader;
  **************************************************************************/
 public class Manager
 {
-	private static List< Handler >	list;
+	private static List< Handler >	list ;
 	static
 	{
-		list = new ArrayList< Handler >();
+		list = new ArrayList< Handler >() ;
 		
-		ServiceLoader< Handler > loader = ServiceLoader.load( Handler.class );
-		Iterator< Handler > it = loader.iterator();
+		ServiceLoader< Handler > loader = ServiceLoader.load( Handler.class ) ;
+		Iterator< Handler > it = loader.iterator() ;
 		while ( it.hasNext() )
-		{
-			list.add( it.next() );
-		}
+			list.add( it.next() ) ;
 	}
 	
 	public static void process( String txt )
 	{
 		for ( Handler handler : list )
-		{
-			if ( handler.accept( txt ) )
-			{
-				handler.execute();
-			}
-		}
+			if ( handler.accept( txt ) ) handler.execute() ;
 	}
 }

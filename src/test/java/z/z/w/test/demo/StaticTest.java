@@ -1,4 +1,4 @@
-package z.z.w.test.demo;
+package z.z.w.test.demo ;
 
 import z.z.w.test.demo.server.Manager ;
 
@@ -20,27 +20,25 @@ public class StaticTest
 	 * 
 	 * @param args
 	 */
-	public static void main( String[ ] args )
+	public static void main( String[] args )
 	{
-		for ( int i = 0; i < 10; i++ )
-		{
+		for ( int i = 0 ; i < 10 ; i++ )
 			try
 			{
-				Thread.sleep( ( long ) ( Math.random() * 1000 ) );
-				new Thread( new TestRunner( i ) ).start();
+				Thread.sleep( ( long ) ( Math.random() * 1000 ) ) ;
+				new Thread( new TestRunner( i ) ).start() ;
 			}
 			catch ( InterruptedException e )
 			{
-				e.printStackTrace();
+				e.printStackTrace() ;
 			}
-		}
 	}
 }
 
 class TestRunner implements Runnable
 {
 	
-	private int	i	= 0;
+	private int	i	= 0 ;
 	
 //	static
 //	{
@@ -49,8 +47,8 @@ class TestRunner implements Runnable
 	
 	public TestRunner( int i )
 	{
-		super();
-		this.i = i;
+		super() ;
+		this.i = i ;
 	}
 	
 	@Override
@@ -58,13 +56,13 @@ class TestRunner implements Runnable
 	{
 		try
 		{
-			Manager.process( String.valueOf( this.i ) );
-			Thread.sleep( ( long ) ( Math.random() * 1000 ) );
+			Manager.process( String.valueOf( i ) ) ;
+			Thread.sleep( ( long ) ( Math.random() * 1000 ) ) ;
 //			System.out.println( "====" + Math.random() * 1000 );
 		}
 		catch ( InterruptedException e )
 		{
-			e.printStackTrace();
+			e.printStackTrace() ;
 		}
 	}
 	

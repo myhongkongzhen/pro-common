@@ -9,6 +9,18 @@ public class SmsApi
 {
 	private static final String	HEX_CHARS	= "0123456789abcdef" ;
 	
+	public static MessageDigest getDigest()
+	{
+		try
+		{
+			return MessageDigest.getInstance( "MD5" ) ;
+		}
+		catch ( NoSuchAlgorithmException e )
+		{
+			throw new RuntimeException( e ) ;
+		}
+	}
+	
 	public static void main( String[] args ) throws Exception
 	{
 		for ( int i = 0 ; i < 2 ; i++ )
@@ -38,6 +50,21 @@ public class SmsApi
 				}
 			} ).start() ;
 		}
+	}
+	
+	public static byte[] md5( byte[] data )
+	{
+		return getDigest().digest( data ) ;
+	}
+	
+	public static byte[] md5( String data )
+	{
+		return md5( data.getBytes() ) ;
+	}
+	
+	public static String md5Hex( String data )
+	{
+		return toHexString( md5( data ) ) ;
 	}
 	
 	/**
@@ -73,32 +100,21 @@ public class SmsApi
 		System.out.println( url ) ;
 		Map< String, String > params = new HashMap< String, String >() ;
 		Map< String, String > map = new HashMap< String, String >() ;
-		map.put( "mobile", mobile ) ;
-		map.put( "param", code ) ;
-		map.put( "extend", "" ) ;
+		map.put( "mobile" , mobile ) ;
+		map.put( "param" , code ) ;
+		map.put( "extend" , "" ) ;
 //		params.put( "data", JSONObject.fromObject( map ).toString() ) ;
 		System.out.println( "==>" + params ) ;
 		
 //				url = "https://rest.nexmo.com/sms/json?api_key=97fa83ab&api_secret=e08c0e99&from=NEXMO&to=8615098648522&text=Welcome+to+Nexmo";
 		
-		HttpClient hc = new HttpClient( url, 5000, 5000 ) ;
-		int status = hc.send( params, "UTF-8" ) ;
+		HttpClient hc = new HttpClient( url , 5000 , 5000 ) ;
+		int status = hc.send( params , "UTF-8" ) ;
 		System.out.println( status ) ;
 		String rsp = hc.getResult() ;
-		if ( status != 200 )
-		{
-			System.out.println( "【短信系统】请求响应码不为200,为:" + status + ",请求URL为：" + url ) ;
-		}
-		else
-		{
-			System.out.println( "---->" + rsp ) ;
-		}
+		if ( status != 200 ) System.out.println( "【短信系统】请求响应码不为200,为:" + status + ",请求URL为：" + url ) ;
+		else System.out.println( "---->" + rsp ) ;
 		
-	}
-	
-	public static String md5Hex( String data )
-	{
-		return toHexString( md5( data ) ) ;
 	}
 	
 	public static String toHexString( byte[] b )
@@ -106,31 +122,9 @@ public class SmsApi
 		StringBuffer sb = new StringBuffer() ;
 		for ( int i = 0 ; i < b.length ; i++ )
 		{
-			sb.append( HEX_CHARS.charAt( b[ i ] >>> 4 & 0x0F ) ) ;
+			sb.append( HEX_CHARS.charAt( ( b[ i ] >>> 4 ) & 0x0F ) ) ;
 			sb.append( HEX_CHARS.charAt( b[ i ] & 0x0F ) ) ;
 		}
 		return sb.toString() ;
-	}
-	
-	public static MessageDigest getDigest()
-	{
-		try
-		{
-			return MessageDigest.getInstance( "MD5" ) ;
-		}
-		catch ( NoSuchAlgorithmException e )
-		{
-			throw new RuntimeException( e ) ;
-		}
-	}
-	
-	public static byte[] md5( byte[] data )
-	{
-		return getDigest().digest( data ) ;
-	}
-	
-	public static byte[] md5( String data )
-	{
-		return md5( data.getBytes() ) ;
 	}
 }

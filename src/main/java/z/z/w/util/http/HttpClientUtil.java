@@ -60,7 +60,7 @@ public class HttpClientUtil
 	private static final Logger			logger					= LoggerFactory.getLogger( HttpClientUtil.class ) ;
 	private static final int			MAX_TOTAL_CONNECTIONS	= 200 ;
 	private static final int			MAX_ROUTE_CONNECTIONS	= 50 ;
-	private static final HttpHost		DEFAULT_TARGETHOST		= new HttpHost( "http://localhost", 8888 ) ;
+	private static final HttpHost		DEFAULT_TARGETHOST		= new HttpHost( "http://localhost" , 8888 ) ;
 	private static final int			CONNECT_TIMEOUT			= 61000 ;
 	private static final int			SOCKET_TIMEOUT			= 61000 ;
 	private static final int			CONN_MANAGER_TIMEOUT	= 61000 ;
@@ -90,11 +90,12 @@ public class HttpClientUtil
 			connManager.setDefaultConnectionConfig( connectionConfig ) ;
 			connManager.setMaxTotal( MAX_TOTAL_CONNECTIONS ) ;
 			connManager.setDefaultMaxPerRoute( MAX_ROUTE_CONNECTIONS ) ;
-			connManager.setMaxPerRoute( new HttpRoute( DEFAULT_TARGETHOST ), 50 ) ;
+			connManager.setMaxPerRoute( new HttpRoute( DEFAULT_TARGETHOST ) , 50 ) ;
 			
 			HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler()
 			{
-				public boolean retryRequest( IOException exception, int executionCount, HttpContext context )
+				@Override
+				public boolean retryRequest( IOException exception , int executionCount , HttpContext context )
 				{
 					if ( executionCount >= 5 ) return false ;
 					if ( exception instanceof InterruptedIOException ) return false ;
@@ -113,193 +114,7 @@ public class HttpClientUtil
 		}
 		catch ( Exception e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-		}
-	}
-	
-	/**
-	 * @return the httpClient
-	 */
-	public static CloseableHttpClient getHttpClient()
-	{
-		return httpClient ;
-	}
-	
-	/**
-	 * 解决BODY中文乱码问题
-	 * Create by : 2015年9月2日 下午2:37:29
-	 * 
-	 * @throws Exception
-	 */
-	public static String httpPost( String url, String msg ) throws Exception
-	{
-		try
-		{
-			StringEntity stringEntity = new StringEntity( msg, "utf-8" ) ;// 解决中文乱码问题
-			HttpPost httpPost = new HttpPost( url ) ;
-			httpPost.setEntity( stringEntity ) ;
-			
-			return doPost( httpPost ) ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-	}
-	
-	/**
-	 * 解決參數&xxx=xxx中文編碼，UTF-8
-	 * Create by : 2015年9月14日 上午11:00:56
-	 */
-	public static String httpPost( String url, Map< String, String > paramMap ) throws Exception
-	{
-		try
-		{
-			HttpPost httpPost = new HttpPost( url ) ;
-			setParam( httpPost, paramMap ) ;
-			
-			return doPost( httpPost ) ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-	}
-	
-	/**
-	 * URL參數map
-	 * 自定義header
-	 * Create by : 2015年9月14日 上午11:02:05
-	 */
-	public static String httpPost( String httpUrl, Map< String, String > paramMap, Map< String, String > headerMap ) throws Exception
-	{
-		try
-		{
-			HttpPost httpPost = new HttpPost( httpUrl ) ;
-			setParam( httpPost, paramMap ) ;
-			setHeader( httpPost, headerMap ) ;
-			
-			return doPost( httpPost ) ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-	}
-	
-	/**
-	 * 請求URL中包含特殊字符,使用此API發送請求
-	 * http://XXX.XXX.XXX:XXX/SingleSMS?json={"SingleSMSRequest":{"UserID":"1000001"}}
-	 * Create by : 2015年9月14日 下午2:31:26
-	 */
-	public static String httpPostParticular( String httpUrl, Map< String, String > paramMap, Map< String, String > headerMap ) throws Exception
-	{
-		try
-		{
-			URL url = new URL( httpUrl ) ;
-			URI uri = new URI( url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null ) ;
-			
-			HttpPost httpPost = new HttpPost( uri ) ;
-			setParam( httpPost, paramMap ) ;
-			setHeader( httpPost, headerMap ) ;
-			
-			return doPost( httpPost ) ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-	}
-	
-	/**
-	 * Create by : 2015年9月14日 上午11:04:22
-	 * 
-	 * @throws UnsupportedEncodingException
-	 */
-	private static void setParam( HttpPost httpPost, Map< String, String > paramMap ) throws UnsupportedEncodingException
-	{
-		if ( null != paramMap && !paramMap.isEmpty() )
-		{
-			List< NameValuePair > params = new LinkedList< NameValuePair >() ;
-			
-			for ( Map.Entry< String, String > entry : paramMap.entrySet() )
-				params.add( new BasicNameValuePair( StringUtils.trimToEmpty( entry.getKey() ), StringUtils.trimToEmpty( entry.getValue() ) ) ) ;
-			
-			if ( null != params && !params.isEmpty() ) httpPost.setEntity( new UrlEncodedFormEntity( params, "UTF-8" ) ) ;
-		}
-		
-	}
-	
-	/**
-	 * Create by : 2015年9月14日 上午11:03:15
-	 */
-	private static void setHeader( HttpPost httpPost, Map< String, String > headerMap )
-	{
-		if ( null != headerMap && headerMap.size() > 0 )
-		{
-			for ( Map.Entry< String, String > entry : headerMap.entrySet() )
-				httpPost.setHeader( StringUtils.trimToEmpty( entry.getKey() ), StringUtils.trimToEmpty( entry.getValue() ) ) ;
-		}
-		
-	}
-	
-	/**
-	 * 解决BODY中文乱码问题
-	 * 自定義header
-	 * Create by : 2015年9月2日 下午2:52:24
-	 */
-	public static String httpPost( String url, String msg, Map< String, String > headerMap ) throws Exception
-	{
-		try
-		{
-			StringEntity stringEntity = new StringEntity( msg, "utf-8" ) ;// 解决中文乱码问题
-			
-			HttpPost httpPost = new HttpPost( url ) ;
-			httpPost.setEntity( stringEntity ) ;
-			
-			setHeader( httpPost, headerMap ) ;
-			
-			return doPost( httpPost ) ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-	}
-	
-	/**
-	 * 請求URL中包含特殊字符,使用此API發送請求
-	 * http://XXX.XXX.XXX:XXX/SingleSMS?json={"SingleSMSRequest":{"UserID":"1000001"}}
-	 * Create by : 2015年8月27日 下午4:45:32
-	 */
-	public static String httpPostParticular( String httpUrl ) throws Exception
-	{
-		try
-		{
-			URL url = new URL( httpUrl ) ;
-			URI uri = new URI( url.getProtocol(), url.getHost(), url.getPath(), url.getQuery(), null ) ;
-			HttpPost httpPost = new HttpPost( uri ) ;
-			return doPost( httpPost ) ;
-		}
-		catch ( MalformedURLException e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-		catch ( URISyntaxException e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
-		}
-		catch ( Exception e )
-		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
-			throw e ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 		}
 	}
 	
@@ -323,13 +138,13 @@ public class HttpClientUtil
 //			httpPost.addHeader( "refer", "localhost" ) ;
 //			httpPost.addHeader( HTTP.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; rv:6.0.2) Gecko/20100101 Firefox/6.0.2" ) ;
 			
-			CloseableHttpResponse response = httpClient.execute( httpPost, HttpClientContext.create() ) ;
+			CloseableHttpResponse response = httpClient.execute( httpPost , HttpClientContext.create() ) ;
 			try
 			{
 				HttpEntity entity = response.getEntity() ;
-				logger.debug( "{}", entity ) ;
+				logger.debug( "{}" , entity ) ;
 //				return EntityUtils.toString( entity, "GBK" ) ;
-				return EntityUtils.toString( entity, "utf-8" ) ;
+				return EntityUtils.toString( entity , "utf-8" ) ;
 			}
 			finally
 			{
@@ -338,24 +153,32 @@ public class HttpClientUtil
 		}
 		catch ( ClientProtocolException e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 			throw e ;
 		}
 		catch ( ParseException e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 			throw e ;
 		}
 		catch ( IOException e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 			throw e ;
 		}
 		catch ( Exception e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 			throw e ;
 		}
+	}
+	
+	/**
+	 * @return the httpClient
+	 */
+	public static CloseableHttpClient getHttpClient()
+	{
+		return httpClient ;
 	}
 	
 	public static String httpPost( String url ) throws Exception
@@ -367,8 +190,183 @@ public class HttpClientUtil
 		}
 		catch ( Exception e )
 		{
-			logger.error( "HttpClientUtil error : [{}].", e.getMessage(), e ) ;
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
 			throw e ;
+		}
+		
+	}
+	
+	/**
+	 * 解決參數&xxx=xxx中文編碼，UTF-8
+	 * Create by : 2015年9月14日 上午11:00:56
+	 */
+	public static String httpPost( String url , Map< String, String > paramMap ) throws Exception
+	{
+		try
+		{
+			HttpPost httpPost = new HttpPost( url ) ;
+			setParam( httpPost , paramMap ) ;
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * URL參數map
+	 * 自定義header
+	 * Create by : 2015年9月14日 上午11:02:05
+	 */
+	public static String httpPost( String httpUrl , Map< String, String > paramMap , Map< String, String > headerMap ) throws Exception
+	{
+		try
+		{
+			HttpPost httpPost = new HttpPost( httpUrl ) ;
+			setParam( httpPost , paramMap ) ;
+			setHeader( httpPost , headerMap ) ;
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * 解决BODY中文乱码问题
+	 * Create by : 2015年9月2日 下午2:37:29
+	 * 
+	 * @throws Exception
+	 */
+	public static String httpPost( String url , String msg ) throws Exception
+	{
+		try
+		{
+			StringEntity stringEntity = new StringEntity( msg , "utf-8" ) ;// 解决中文乱码问题
+			HttpPost httpPost = new HttpPost( url ) ;
+			httpPost.setEntity( stringEntity ) ;
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * 解决BODY中文乱码问题
+	 * 自定義header
+	 * Create by : 2015年9月2日 下午2:52:24
+	 */
+	public static String httpPost( String url , String msg , Map< String, String > headerMap ) throws Exception
+	{
+		try
+		{
+			StringEntity stringEntity = new StringEntity( msg , "utf-8" ) ;// 解决中文乱码问题
+			
+			HttpPost httpPost = new HttpPost( url ) ;
+			httpPost.setEntity( stringEntity ) ;
+			
+			setHeader( httpPost , headerMap ) ;
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * 請求URL中包含特殊字符,使用此API發送請求
+	 * http://XXX.XXX.XXX:XXX/SingleSMS?json={"SingleSMSRequest":{"UserID":"1000001"}}
+	 * Create by : 2015年8月27日 下午4:45:32
+	 */
+	public static String httpPostParticular( String httpUrl ) throws Exception
+	{
+		try
+		{
+			URL url = new URL( httpUrl ) ;
+			URI uri = new URI( url.getProtocol() , url.getHost() , url.getPath() , url.getQuery() , null ) ;
+			HttpPost httpPost = new HttpPost( uri ) ;
+			return doPost( httpPost ) ;
+		}
+		catch ( MalformedURLException e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+		catch ( URISyntaxException e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * 請求URL中包含特殊字符,使用此API發送請求
+	 * http://XXX.XXX.XXX:XXX/SingleSMS?json={"SingleSMSRequest":{"UserID":"1000001"}}
+	 * Create by : 2015年9月14日 下午2:31:26
+	 */
+	public static String httpPostParticular( String httpUrl , Map< String, String > paramMap , Map< String, String > headerMap ) throws Exception
+	{
+		try
+		{
+			URL url = new URL( httpUrl ) ;
+			URI uri = new URI( url.getProtocol() , url.getHost() , url.getPath() , url.getQuery() , null ) ;
+			
+			HttpPost httpPost = new HttpPost( uri ) ;
+			setParam( httpPost , paramMap ) ;
+			setHeader( httpPost , headerMap ) ;
+			
+			return doPost( httpPost ) ;
+		}
+		catch ( Exception e )
+		{
+			logger.error( "HttpClientUtil error : [{}]." , e.getMessage() , e ) ;
+			throw e ;
+		}
+	}
+	
+	/**
+	 * Create by : 2015年9月14日 上午11:03:15
+	 */
+	private static void setHeader( HttpPost httpPost , Map< String, String > headerMap )
+	{
+		if ( ( null != headerMap ) && ( headerMap.size() > 0 ) ) for ( Map.Entry< String, String > entry : headerMap.entrySet() )
+			httpPost.setHeader( StringUtils.trimToEmpty( entry.getKey() ) , StringUtils.trimToEmpty( entry.getValue() ) ) ;
+		
+	}
+	
+	/**
+	 * Create by : 2015年9月14日 上午11:04:22
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	private static void setParam( HttpPost httpPost , Map< String, String > paramMap ) throws UnsupportedEncodingException
+	{
+		if ( ( null != paramMap ) && !paramMap.isEmpty() )
+		{
+			List< NameValuePair > params = new LinkedList< NameValuePair >() ;
+			
+			for ( Map.Entry< String, String > entry : paramMap.entrySet() )
+				params.add( new BasicNameValuePair( StringUtils.trimToEmpty( entry.getKey() ) , StringUtils.trimToEmpty( entry.getValue() ) ) ) ;
+			
+			if ( ( null != params ) && !params.isEmpty() ) httpPost.setEntity( new UrlEncodedFormEntity( params , "UTF-8" ) ) ;
 		}
 		
 	}

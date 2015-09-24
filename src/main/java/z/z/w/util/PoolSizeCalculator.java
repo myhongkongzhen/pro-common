@@ -6,6 +6,9 @@ import java.util.Timer ;
 import java.util.TimerTask ;
 import java.util.concurrent.BlockingQueue ;
 
+import org.slf4j.Logger ;
+import org.slf4j.LoggerFactory ;
+
 /************************************************************************************************
  * <pre>
  *     FileName: z.z.w.util.PoolSizeCalculator.java
@@ -20,6 +23,8 @@ import java.util.concurrent.BlockingQueue ;
  ************************************************************************************************/
 public abstract class PoolSizeCalculator
 {
+	final static Logger			logger				= LoggerFactory.getLogger( PoolSizeCalculator.class ) ;
+	
 	/**
 	 * The sample queue size to calculate the size of a single {@link Runnable} element.
 	 */
@@ -63,14 +68,43 @@ public abstract class PoolSizeCalculator
 		calculateOptimalThreadCount( cputime , waittime , targetUtilization ) ;
 	}
 	
+	/**
+	 * Calculates the memory usage of a single element in a work queue. Based on
+	 * Heinz Kabbutz' ideas
+	 * (http://www.javaspecialists.eu/archive/Issue029.html).
+	 * 
+	 * @return memory usage of a single {@link Runnable} element in the thread
+	 *         pools work queue
+	 */
+	public long calculateMemoryUsage()
+	{
+		BlockingQueue< Runnable > queue = createWorkQueue() ;
+		for ( int i = 0 ; i < SAMPLE_QUEUE_SIZE ; i++ )
+			queue.add( creatTask() ) ;
+		long mem0 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
+		long mem1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
+		queue = null ;
+		collectGarbage( 15 ) ;
+		mem0 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
+		queue = createWorkQueue() ;
+		for ( int i = 0 ; i < SAMPLE_QUEUE_SIZE ; i++ )
+			queue.add( creatTask() ) ;
+		logger.info( "queue:{}" , queue ) ;
+		collectGarbage( 15 ) ;
+		mem1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
+		logger.info( "mem0:{}.mem1:{}.(( mem1 - mem0 )/SAMPLE_QUEUE_SIZE):{}." , mem0 , mem1 , ( ( mem1 - mem0 ) / SAMPLE_QUEUE_SIZE ) ) ;
+		return ( mem1 - mem0 ) / SAMPLE_QUEUE_SIZE ;
+	}
+	
 	private void calculateOptimalCapacity( BigDecimal targetQueueSizeBytes )
 	{
 		long mem = calculateMemoryUsage() ;
+		logger.info( "=====>>>{}" , mem ) ;
 		BigDecimal queueCapacity = targetQueueSizeBytes.divide( new BigDecimal( mem ) , RoundingMode.HALF_UP ) ;
-		System.out.println( "Target queue memory usage (bytes): " + targetQueueSizeBytes ) ;
-		System.out.println( "createTask() produced " + creatTask().getClass().getName() + " which took " + mem + " bytes in a queue" ) ;
-		System.out.println( "Formula: " + targetQueueSizeBytes + " / " + mem ) ;
-		System.out.println( "* Recommended queue capacity (bytes): " + queueCapacity ) ;
+		logger.info( "Target queue memory usage (bytes): {}." , targetQueueSizeBytes ) ;
+		logger.info( "createTask() produced " + creatTask().getClass().getName() + " which took " + mem + " bytes in a queue" ) ;
+		logger.info( "Formula: " + targetQueueSizeBytes + " / " + mem ) ;
+		logger.info( "* Recommended queue capacity (bytes): " + queueCapacity ) ;
 	}
 	
 	/**
@@ -91,49 +125,13 @@ public abstract class PoolSizeCalculator
 		BigDecimal numberOfCPU = new BigDecimal( Runtime.getRuntime().availableProcessors() ) ;
 		BigDecimal optimalthreadcount = numberOfCPU.multiply( targetUtilization )
 													.multiply( new BigDecimal( 1 ).add( waitTime.divide( computeTime , RoundingMode.HALF_UP ) ) ) ;
-		System.out.println( "Number of CPU: " + numberOfCPU ) ;
-		System.out.println( "Target utilization: " + targetUtilization ) ;
-		System.out.println( "Elapsed time (nanos): " + ( testtime * 1000000 ) ) ;
-		System.out.println( "Compute time (nanos): " + cpu ) ;
-		System.out.println( "Wait time (nanos): " + wait ) ;
-		System.out.println( "Formula: " + numberOfCPU + " * " + targetUtilization + " * (1 + " + waitTime + " / " + computeTime + ")" ) ;
-		System.out.println( "* Optimal thread count: " + optimalthreadcount ) ;
-	}
-	
-	/**
-	 * Runs the {@link Runnable} over a period defined in {@link #testtime}.
-	 * Based on Heinz Kabbutz' ideas
-	 * (http://www.javaspecialists.eu/archive/Issue124.html).
-	 * 
-	 * @param task
-	 *            the runnable under investigation
-	 */
-	public void start( Runnable task )
-	{
-		long start = 0 ;
-		int runs = 0 ;
-		do
-		{
-			if ( ++runs > 5 ) { throw new IllegalStateException( "Test not accurate" ) ; }
-			expired = false ;
-			start = System.currentTimeMillis() ;
-			Timer timer = new Timer() ;
-			timer.schedule( new TimerTask()
-			{
-				public void run()
-				{
-					expired = true ;
-				}
-			} , testtime ) ;
-			while ( !expired )
-			{
-				task.run() ;
-			}
-			start = System.currentTimeMillis() - start ;
-			timer.cancel() ;
-		}
-		while ( Math.abs( start - testtime ) > EPSYLON ) ;
-		collectGarbage( 3 ) ;
+		logger.info( "Number of CPU: " + numberOfCPU ) ;
+		logger.info( "Target utilization: " + targetUtilization ) ;
+		logger.info( "Elapsed time (nanos): " + ( testtime * 1000000 ) ) ;
+		logger.info( "Compute time (nanos): " + cpu ) ;
+		logger.info( "Wait time (nanos): " + wait ) ;
+		logger.info( "Formula: " + numberOfCPU + " * " + targetUtilization + " * (1 + " + waitTime + " / " + computeTime + ")" ) ;
+		logger.info( "* Optimal thread count: " + optimalthreadcount ) ;
 	}
 	
 	private void collectGarbage( int times )
@@ -154,34 +152,11 @@ public abstract class PoolSizeCalculator
 	}
 	
 	/**
-	 * Calculates the memory usage of a single element in a work queue. Based on
-	 * Heinz Kabbutz' ideas
-	 * (http://www.javaspecialists.eu/archive/Issue029.html).
+	 * Return an instance of the queue used in the thread pool.
 	 * 
-	 * @return memory usage of a single {@link Runnable} element in the thread
-	 *         pools work queue
+	 * @return queue instance
 	 */
-	public long calculateMemoryUsage()
-	{
-		BlockingQueue< Runnable > queue = createWorkQueue() ;
-		for ( int i = 0 ; i < SAMPLE_QUEUE_SIZE ; i++ )
-		{
-			queue.add( creatTask() ) ;
-		}
-		long mem0 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
-		long mem1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
-		queue = null ;
-		collectGarbage( 15 ) ;
-		mem0 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
-		queue = createWorkQueue() ;
-		for ( int i = 0 ; i < SAMPLE_QUEUE_SIZE ; i++ )
-		{
-			queue.add( creatTask() ) ;
-		}
-		collectGarbage( 15 ) ;
-		mem1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ;
-		return ( mem1 - mem0 ) / SAMPLE_QUEUE_SIZE ;
-	}
+	protected abstract BlockingQueue< Runnable > createWorkQueue() ;
 	
 	/**
 	 * Create your runnable task here.
@@ -189,13 +164,6 @@ public abstract class PoolSizeCalculator
 	 * @return an instance of your runnable task under investigation
 	 */
 	protected abstract Runnable creatTask() ;
-	
-	/**
-	 * Return an instance of the queue used in the thread pool.
-	 * 
-	 * @return queue instance
-	 */
-	protected abstract BlockingQueue< Runnable > createWorkQueue() ;
 	
 	/**
 	 * Calculate current cpu time. Various frameworks may be used here,
@@ -206,4 +174,39 @@ public abstract class PoolSizeCalculator
 	 * @return current cpu time of current thread
 	 */
 	protected abstract long getCurrentThreadCPUTime() ;
+	
+	/**
+	 * Runs the {@link Runnable} over a period defined in {@link #testtime}.
+	 * Based on Heinz Kabbutz' ideas
+	 * (http://www.javaspecialists.eu/archive/Issue124.html).
+	 * 
+	 * @param task
+	 *            the runnable under investigation
+	 */
+	public void start( Runnable task )
+	{
+		long start = 0 ;
+		int runs = 0 ;
+		do
+		{
+			if ( ++runs > 5 ) throw new IllegalStateException( "Test not accurate" ) ;
+			expired = false ;
+			start = System.currentTimeMillis() ;
+			Timer timer = new Timer() ;
+			timer.schedule( new TimerTask()
+			{
+				@Override
+				public void run()
+				{
+					expired = true ;
+				}
+			} , testtime ) ;
+			while ( !expired )
+				task.run() ;
+			start = System.currentTimeMillis() - start ;
+			timer.cancel() ;
+		}
+		while ( Math.abs( start - testtime ) > EPSYLON ) ;
+		collectGarbage( 3 ) ;
+	}
 }

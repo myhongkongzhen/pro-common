@@ -26,6 +26,21 @@ public class AsyncIOTask implements Runnable
 	@Override
 	public void run()
 	{
+//		boolean flag = Boolean.FALSE ;
+//		for ( int i = 0 ; i < 10000000 ; i++ )
+//		{
+//			if ( flag )
+//			{
+////				System.out.println( "break" ) ;
+//				break ;
+//			}
+////			System.out.println( i ) ;
+//			if ( ( ( ( i + 1 ) % 10 ) == 0 ) )
+//			{
+//				flag = Boolean.TRUE ;
+//			}
+//			
+//		}
 		HttpURLConnection connection = null ;
 		BufferedReader reader = null ;
 		try
@@ -37,8 +52,7 @@ public class AsyncIOTask implements Runnable
 			connection.connect() ;
 			reader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) ) ;
 			
-			String line = null ;
-			while ( ( line = reader.readLine() ) != null )
+			while ( ( reader.readLine() ) != null )
 			{
 //				 empty loop
 			}
@@ -50,16 +64,13 @@ public class AsyncIOTask implements Runnable
 		}
 		finally
 		{
-			if ( reader != null )
+			if ( reader != null ) try
 			{
-				try
-				{
-					reader.close() ;
-				}
-				catch ( Exception e )
-				{	
-					
-				}
+				reader.close() ;
+			}
+			catch ( Exception e )
+			{	
+				
 			}
 			connection.disconnect() ;
 		}

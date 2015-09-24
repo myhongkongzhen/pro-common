@@ -19,40 +19,41 @@ public class SpringContextUtil implements ApplicationContextAware
 {
 	private static transient ApplicationContext	applicationContext ;
 	
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext
-	 * )
-	 */
-	public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException
-	{
-		SpringContextUtil.applicationContext = applicationContext ;
-	}
-	
-	@SuppressWarnings( "unchecked" )
-	public static < T > T getBean( Class< T > type, String name )
-	{
-		
-		if ( getApplicationContext().containsBean( name ) )
-		{
-			Object bean = getApplicationContext().getBean( name ) ;
-			if ( type.isInstance( bean ) ) { return ( T ) bean ; }
-		}
-		return null ;
-	}
-	
-	public static < T > T getBean( final Class< T > clazz )
-	{
-		return clazz.cast( BeanFactoryUtils.beanOfTypeIncludingAncestors( SpringContextUtil.applicationContext, clazz ) ) ;
-	}
-	
 	/**
 	 * @return the applicationContext
 	 */
 	public static ApplicationContext getApplicationContext()
 	{
 		return applicationContext ;
+	}
+	
+	public static < T > T getBean( final Class< T > clazz )
+	{
+		return clazz.cast( BeanFactoryUtils.beanOfTypeIncludingAncestors( SpringContextUtil.applicationContext , clazz ) ) ;
+	}
+	
+	@SuppressWarnings( "unchecked" )
+	public static < T > T getBean( Class< T > type , String name )
+	{
+		
+		if ( getApplicationContext().containsBean( name ) )
+		{
+			Object bean = getApplicationContext().getBean( name ) ;
+			if ( type.isInstance( bean ) ) return ( T ) bean ;
+		}
+		return null ;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext
+	 * )
+	 */
+	@Override
+	public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException
+	{
+		SpringContextUtil.applicationContext = applicationContext ;
 	}
 	
 }

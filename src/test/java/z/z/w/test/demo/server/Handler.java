@@ -1,4 +1,4 @@
-package z.z.w.test.demo.server;
+package z.z.w.test.demo.server ;
 
 /**************************************************************************
  * <pre>
@@ -12,7 +12,7 @@ package z.z.w.test.demo.server;
  **************************************************************************/
 public interface Handler
 {
-	public boolean accept( String txt );
+	public boolean accept( String txt ) ;
 	
-	public String execute();
+	public String execute() ;
 }

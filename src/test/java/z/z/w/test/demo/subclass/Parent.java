@@ -1,4 +1,4 @@
-package z.z.w.test.demo.subclass;
+package z.z.w.test.demo.subclass ;
 
 /**************************************************************************
  * <pre>
@@ -14,11 +14,11 @@ public class Parent
 {
 	public void print()
 	{
-		System.out.println( "--Parent---" );
+		System.out.println( "--Parent---" ) ;
 	}
 	
 	public void test()
 	{
-		System.out.println( "--Parent-test--" );
+		System.out.println( "--Parent-test--" ) ;
 	}
 }
