@@ -1,102 +1,102 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>z.z.w</groupId>
-		<artifactId>pro-module</artifactId>
-		<version>2015083110-SNAPSHOT</version>
-		<relativePath>../pro-module/pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>z.z.w</groupId>
+        <artifactId>pro-module</artifactId>
+        <version>2015083110-SNAPSHOT</version>
+        <relativePath>../pro-module/pom.xml</relativePath>
+    </parent>
 
-	<artifactId>pro-common</artifactId>
-	<packaging>jar</packaging>
+    <artifactId>pro-common</artifactId>
+    <packaging>jar</packaging>
 
-	<name>pro-common</name>
-	<url>http://maven.apache.org</url>
+    <name>pro-common</name>
+    <url>http://maven.apache.org</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-redis</artifactId>
-		</dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework.data</groupId>-->
+        <!--<artifactId>spring-data-redis</artifactId>-->
+        <!--</dependency>-->
 
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
 
-		<!-- http client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<!-- <exclusions> -->
-			<!-- <exclusion> -->
-			<!-- <groupId>commons-logging</groupId> -->
-			<!-- <artifactId>commons-logging</artifactId> -->
-			<!-- </exclusion> -->
-			<!-- </exclusions> -->
-		</dependency>
+        <!-- http client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <!-- <exclusions> -->
+            <!-- <exclusion> -->
+            <!-- <groupId>commons-logging</groupId> -->
+            <!-- <artifactId>commons-logging</artifactId> -->
+            <!-- </exclusion> -->
+            <!-- </exclusions> -->
+        </dependency>
 
-		<!-- spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<!-- <exclusions> -->
-			<!-- <exclusion> -->
-			<!-- <groupId>commons-logging</groupId> -->
-			<!-- <artifactId>commons-logging</artifactId> -->
-			<!-- </exclusion> -->
-			<!-- </exclusions> -->
-		</dependency>
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <!-- <exclusions> -->
+            <!-- <exclusion> -->
+            <!-- <groupId>commons-logging</groupId> -->
+            <!-- <artifactId>commons-logging</artifactId> -->
+            <!-- </exclusion> -->
+            <!-- </exclusions> -->
+        </dependency>
 
-		<!-- JUNIT4 -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
+        <!-- JUNIT4 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
-		<!-- LOGBACK -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
+        <!-- LOGBACK -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
