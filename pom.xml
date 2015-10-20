@@ -61,6 +61,12 @@
             <!-- </exclusions> -->
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <!--<version>1.1.41</version>-->
+        </dependency>
+
         <!-- JUNIT4 -->
         <dependency>
             <groupId>junit</groupId>
@@ -68,8 +74,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
 
         <dependency>

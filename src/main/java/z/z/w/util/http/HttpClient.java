@@ -51,7 +51,7 @@ public enum HttpClient
 	private final Logger		logger					= LoggerFactory.getLogger( HttpClientUtil.class ) ;
 	private final int			MAX_TOTAL_CONNECTIONS	= 200 ;
 	private final int			MAX_ROUTE_CONNECTIONS	= 50 ;
-	private final HttpHost		DEFAULT_TARGETHOST		= new HttpHost( "http://113.31.87.156" , 8080 ) ;
+	private final HttpHost		DEFAULT_TARGETHOST		= new HttpHost( "http://localhost" , 8888 ) ;
 	private final int			CONNECT_TIMEOUT			= 61000 ;
 	private final int			SOCKET_TIMEOUT			= 61000 ;
 	private final int			CONN_MANAGER_TIMEOUT	= 61000 ;
