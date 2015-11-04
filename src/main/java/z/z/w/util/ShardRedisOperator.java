@@ -22,7 +22,7 @@ import java.util.Map;
 
 /*********************************************************************************************
  * <pre>
- *     FileName: com.zy.redis.RedisOperator
+ *     FileName: com.zy.redis.ShardRedisOperator
  *         Desc:
  *       author: Z_Z.W - myhongkongzhen@gmail.com
  *      version: 2015-10-08 16:27
@@ -30,9 +30,9 @@ import java.util.Map;
  *      History:
  * </pre>
  *********************************************************************************************/
-public class RedisOperator
+public class ShardRedisOperator
 {
-	protected final static Logger logger = LoggerFactory.getLogger( RedisOperator.class );
+	protected final static Logger logger = LoggerFactory.getLogger( ShardRedisOperator.class );
 
 	private ShardedJedisPool shardedJedisPool;
 
@@ -41,7 +41,8 @@ public class RedisOperator
 		return shardedJedisPool;
 	}
 
-	@Resource public void setShardedJedisPool( ShardedJedisPool shardedJedisPool )
+	@Resource
+	public void setShardedJedisPool( ShardedJedisPool shardedJedisPool )
 	{
 		this.shardedJedisPool = shardedJedisPool;
 	}
@@ -50,6 +51,7 @@ public class RedisOperator
 	{
 		try
 		{
+
 			ShardedJedis shardJedis = shardedJedisPool.getResource();
 			return shardJedis;
 		}
@@ -77,7 +79,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			result = shardedJedis.set( key, value );
@@ -100,7 +105,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			ShardedJedisPipeline pipeline = shardedJedis.pipelined();
@@ -126,7 +134,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			result = shardedJedis.get( key );
@@ -149,7 +160,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			result = shardedJedis.setex( key, seconds, value );
@@ -172,7 +186,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			result = shardedJedis.hget( key, field );
@@ -196,7 +213,10 @@ public class RedisOperator
 		String result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			ShardedJedisPipeline pipeline = shardedJedis.pipelined();
@@ -224,7 +244,10 @@ public class RedisOperator
 		Long result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			ShardedJedisPipeline pipeline = shardedJedis.pipelined();
@@ -250,7 +273,10 @@ public class RedisOperator
 		Long result = null;
 
 		ShardedJedis shardedJedis = getRedisClient();
-		if ( shardedJedis == null ) { return result; }
+		if ( shardedJedis == null )
+		{
+			return result;
+		}
 		try
 		{
 			ShardedJedisPipeline pipeline = shardedJedis.pipelined();
@@ -274,7 +300,10 @@ public class RedisOperator
 	public List<String> hmget( Collection<String> keySet, String key )
 	{
 		ShardedJedis jedis = getRedisClient();
-		if ( jedis == null ) { return null; }
+		if ( jedis == null )
+		{
+			return null;
+		}
 		try
 		{
 			ShardedJedisPipeline pipelined = jedis.pipelined();
