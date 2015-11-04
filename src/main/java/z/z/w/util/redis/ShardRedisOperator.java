@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.                                                                       *
  **********************************************************************************************************************/
 
-package z.z.w.util;
+package z.z.w.util.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
