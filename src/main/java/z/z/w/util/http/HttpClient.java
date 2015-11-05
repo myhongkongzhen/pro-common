@@ -56,17 +56,12 @@ public enum HttpClient
 	private final int      SOCKET_TIMEOUT        = 61000;
 	private final int      CONN_MANAGER_TIMEOUT  = 61000;
 
-	private final RequestConfig
-			config =
-			RequestConfig.custom()
-						 .setSocketTimeout( SOCKET_TIMEOUT )
-						 .setConnectTimeout( CONNECT_TIMEOUT )
-						 .setConnectionRequestTimeout( CONN_MANAGER_TIMEOUT )
-						 .build();
+	private final RequestConfig config = RequestConfig.custom().setSocketTimeout( SOCKET_TIMEOUT ).setConnectTimeout( CONNECT_TIMEOUT )
+													  .setConnectionRequestTimeout( CONN_MANAGER_TIMEOUT ).build();
 
 	private CloseableHttpClient httpClient = null;
 
-	private HttpClient()
+	HttpClient()
 	{
 		try
 		{
@@ -74,14 +69,9 @@ public enum HttpClient
 			SocketConfig socketConfig = SocketConfig.custom().setTcpNoDelay( true ).build();
 			connManager.setDefaultSocketConfig( socketConfig );
 			MessageConstraints messageConstraints = MessageConstraints.custom().setMaxHeaderCount( 200 ).setMaxLineLength( 2000 ).build();
-			ConnectionConfig
-					connectionConfig =
-					ConnectionConfig.custom()
-									.setMalformedInputAction( CodingErrorAction.IGNORE )
-									.setUnmappableInputAction( CodingErrorAction.IGNORE )
-									.setCharset( Consts.UTF_8 )
-									.setMessageConstraints( messageConstraints )
-									.build();
+			ConnectionConfig connectionConfig = ConnectionConfig.custom().setMalformedInputAction( CodingErrorAction.IGNORE )
+																.setUnmappableInputAction( CodingErrorAction.IGNORE ).setCharset( Consts.UTF_8 )
+																.setMessageConstraints( messageConstraints ).build();
 			connManager.setDefaultConnectionConfig( connectionConfig );
 			connManager.setMaxTotal( MAX_TOTAL_CONNECTIONS );
 			connManager.setDefaultMaxPerRoute( MAX_ROUTE_CONNECTIONS );
@@ -89,7 +79,8 @@ public enum HttpClient
 
 			HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler()
 			{
-				@Override public boolean retryRequest( IOException exception, int executionCount, HttpContext context )
+				@Override
+				public boolean retryRequest( IOException exception, int executionCount, HttpContext context )
 				{
 					if ( executionCount >= 5 ) return false;
 					if ( exception instanceof InterruptedIOException ) return false;
@@ -97,8 +88,8 @@ public enum HttpClient
 					if ( exception instanceof ConnectTimeoutException ) return false;
 					if ( exception instanceof SSLException ) return false;
 					HttpClientContext clientContext = HttpClientContext.adapt( context );
-					HttpRequest request = clientContext.getRequest();
-					boolean idempotent = !( request instanceof HttpEntityEnclosingRequest );
+					HttpRequest       request       = clientContext.getRequest();
+					boolean           idempotent    = !( request instanceof HttpEntityEnclosingRequest );
 					if ( idempotent ) return true;
 					return false;
 				}
