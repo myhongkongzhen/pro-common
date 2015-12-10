@@ -23,7 +23,7 @@ import java.util.Properties;
 public class InitializeServerImpl implements IServiceLoader
 {
 	final static Logger	logger			= LoggerFactory.getLogger( InitializeServerImpl.class ) ;
-	final static String	RELATIVE_PATH	= "conf/services.properties" ;
+	final static String	RELATIVE_PATH	= "pro/services.properties" ;
 	
 	/*
 	 * (non-Javadoc)
