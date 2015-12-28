@@ -1,66 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.                                      ~
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.                       ~
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.                                                  ~
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.                    ~
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.                                                                      ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <configuration>
 
-	<property name="ErrorStart"
-		value="-------------------------------------------------------Error Start--------------------------------------------------------" />
-	<property name="ErrorEnd"
-		value="--------------------------------------------------------Error End---------------------------------------------------------" />
+    <property name="BaseLogPath" value="${logback.target}"/>
+    <property name="ErrorStart"
+              value="-------------------------------------------------------Error Start--------------------------------------------------------"/>
+    <property name="ErrorEnd"
+              value="--------------------------------------------------------Error End---------------------------------------------------------"/>
 
-	<appender name="commonFile"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logback.target}/logs/infoFile.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>${logback.target}/logs/infoFile.log.%i</fileNamePattern>
-			<minIndex>1</minIndex>
-			<maxIndex>6</maxIndex>
-		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>80MB</maxFileSize>
-		</triggeringPolicy>
-		<encoder>
-			<pattern>[%d{yyyy-MM-dd HH:mm:ss}]%5level - %m %n</pattern>
-		</encoder>
-	</appender>
+    <appender name="commonFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BaseLogPath}/logs/infoFile.log</file>
+        <!-- <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy"> -->
+        <!-- <fileNamePattern>${BaseLogPath}/logs/infoFile.log.%i -->
+        <!-- </fileNamePattern> -->
+        <!-- <minIndex>1</minIndex> -->
+        <!-- <maxIndex>6</maxIndex> -->
+        <!-- </rollingPolicy> -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <FileNamePattern>${BaseLogPath}/logs/infoFile.log.%d{yyyy-MM-dd}
+            </FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <!-- <triggeringPolicy -->
+        <!-- class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"> -->
+        <!-- <maxFileSize>80MB</maxFileSize> -->
+        <!-- </triggeringPolicy> -->
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%t]%5level - %m %n</pattern>
+        </encoder>
+    </appender>
 
-	<!-- 文件記錄錯誤日誌 ERROR 簡單記錄 -->
-	<appender name="errorFile"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logback.target}/logs/errorFile.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>${logback.target}/logs/errorFile.log.%i</fileNamePattern>
-			<minIndex>1</minIndex>
-			<maxIndex>3</maxIndex>
-		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>100MB</maxFileSize>
-		</triggeringPolicy>
-		<encoder>
-			<pattern>%n[%d{yyyy-MM-dd HH:mm:ss}] ${ErrorStart}%n [%t] %m [%logger:%L]%n[%d{yyyy-MM-dd HH:mm:ss}] ${ErrorEnd}%n%n</pattern>
-		</encoder>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>ERROR</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>   
-		</filter>
-	</appender>
+    <!-- 文件記錄錯誤日誌 ERROR 簡單記錄 -->
+    <appender name="errorFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BaseLogPath}/logs/errorFile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>
+                ${BaseLogPath}/logs/errorFile.log.%i
+            </fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>6</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern><![CDATA[ %n[%d{yyyy-MM-dd HH:mm:ss.SSS}] ${ErrorStart}%n [%t] %m [%logger:%L]%n[%d{yyyy-MM-dd HH:mm:ss.SSS}] ${ErrorEnd}%n%n ]]></pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
 
-	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>[%d{HH:mm:ss}][%5level]-【%m】[%logger:%L]-[%t]%n%n</pattern>
-		</layout>
-	</appender>
-	
-	<logger name="z.z.w" level="info"/>
-	<!-- mybatis sql 日誌 -->
-	<logger name="z.z.w.test.dao" level="debug" />
- 
-	<root level="error">
-		<appender-ref ref="commonFile" />
-		<appender-ref ref="errorFile" />
-		<appender-ref ref="console" />
-	</root>
+    <!-- 异步输出 -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>512</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="commonFile"/>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%d{HH:mm:ss.SSS}][%5level]-【%m】[%logger:%L]-[%t]%n%n</pattern>
+        </layout>
+    </appender>
+
+    <logger name="z.z.w" level="info"/>
+    <!-- mybatis sql 日誌 -->
+    <logger name="z.z.w.test.dao" level="${logback.printsql}"/>
+
+    <root level="error">
+        <!-- <appender-ref ref="ASYNC" /> -->
+        <appender-ref ref="commonFile"/>
+        <appender-ref ref="errorFile"/>
+        ${logback.console}
+    </root>
 
 </configuration>
 
